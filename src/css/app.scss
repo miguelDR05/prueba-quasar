@@ -1,0 +1,62 @@
+// app global css in SCSS form
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+@import 'src/css/quasar.variables.scss';
+
+:root {
+  --q-toolbar1: #495a69;
+  --q-toolbar2: #aadadf;
+  --q-thead: white;
+  --height-table: 57vh;
+  --primary: #495a69;
+  --secondary: #aadadf;
+}
+.background-toolbar {
+  background: #fcfbfe !important;
+  color: #1D1D1D;
+}
+.text-primary {
+  color: var(--primary) !important;
+}
+.text-secondary {
+  color: var(--secondary) !important;
+}
+.toolbar1 {
+  background: var(--q-toolbar1) !important;
+  color: white;
+}
+.toolbar2 {
+  background: $secondary !important;
+  color: white;
+}
+body{
+  font-family: 'Poppins', sans-serif;
+  height: 100%
+}
+.body--light {
+  background-color: #fcfbfe;
+  // background-color: #303030;
+  color: #000;
+}
+
+body.body--dark {
+  background-color: $dark;
+  color: #fff;
+}
+.bg-tool-tip{
+  color: #fcfbfe;
+  background-color: $secondary;
+  font-weight: 700;
+}
+.btn-drawer{
+  color: #7d7c81;
+}
+.btn-drawer-background{
+  background-color: $primary;
+  color: #fff;
+}
+
+
