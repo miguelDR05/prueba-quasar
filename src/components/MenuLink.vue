@@ -6,7 +6,7 @@
       :header-class="level === 1 ? 'text-primary' : ''"
     -->
     <q-expansion-item default-closed :content-inset-level="0.5" :group="level.toString().trim()" :dense="dense"
-      active-class="actives__link" class="q-mb-xs overflow-hidden text-grey-8 expansion-item" style="border-radius: 8px;"
+      active-class="actives__link" class="q-mb-xs overflow-hidden text-grey-8 item-drawer" style="border-radius: 8px;"
       :expand-icon="level === 1 ? 'add' : 'nada'" expanded-icon="remove" @before-show="expandActivate = true"
       @before-hide="expandActivate = false" :class="expandActivate ? 'transition__active' : ''" :duration="250">
       <!-- popup unread -->
@@ -20,15 +20,19 @@
           <q-skeleton type="text" v-if="title && (title === '' || title === undefined)" />
           {{ title }}
         </q-item-section>
+        <q-tooltip v-if="miniState" anchor="center right" self="center left" :offset="[10, 10]" class="bg-secondary">{{
+          title
+        }}</q-tooltip>
       </template>
       <MenuLink v-for=" child  in  children " :key="child.idModuleAuth" v-bind="child" :dense="dense">
       </MenuLink>
+
     </q-expansion-item>
   </div>
   <div v-else class="">
     <q-separator v-if="separator" />
     <q-space />
-    <q-item clickable :dense="dense" :to="link" class="q-my-xs" active-class="actives__link">
+    <q-item clickable :dense="dense" :to="link" class="item-drawer q-my-xs" active-class="actives__link">
       <!-- <q-item-section v-if="icon" avatar>
         <q-icon :name="icon" color="grey" />
       </q-item-section> -->
@@ -90,18 +94,19 @@ const listPermisosUser = computed(() => {
 
 </script>
 <style lang="sass">
-.q-item
-  min-height: 35px
-  border-radius: 8px
-.q-item__section--side > .q-icon
-  font-size: 18px
-  font-weight: bolder
+.item-drawer
+  .q-item
+    min-height: 35px
+    border-radius: 8px
+  .q-item__section--side > .q-icon
+    font-size: 18px
+    font-weight: bolder
 
-.q-item__section--avatar
-  min-width: 5px
+  .q-item__section--avatar
+    min-width: 5px
 
-.q-item__section--side
-  // padding-right: 5px !important
+  .q-item__section--side
+    // padding-right: 5px !important
 
 .actives__link
   color: #1f1e20

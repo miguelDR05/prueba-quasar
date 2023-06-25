@@ -6,7 +6,8 @@
         <q-icon :name="icon" class="cursor-pointer" :color="Dark.isActive ? 'secondary' : 'primary'">
           <q-popup-proxy prepend transition-show="scale" transition-hide="scale"
             @before-hide="convertString(), changeRangeDate()">
-            <q-date v-model="fechaModel" :mask="mask" :range="range" :landscape="landscape">
+            <q-date v-model="fechaModel" :mask="mask" :range="range" :landscape="landscape" class="range-date"
+              :minimal="minimal">
             </q-date>
           </q-popup-proxy>
         </q-icon>
@@ -35,6 +36,7 @@ interface Props {
   outlined?: boolean;
   filled?: boolean;
   landscape?: boolean;
+  minimal?: boolean;
 }
 const defaultProps = withDefaults(defineProps<Props>(), {
   label: 'Rango de fechas',
@@ -50,6 +52,7 @@ const defaultProps = withDefaults(defineProps<Props>(), {
   outlined: false,
   filled: false,
   landscape: false,
+  minimal: false,
 
 });
 
@@ -92,6 +95,8 @@ onMounted(async () => {
 });
 
 </script>
-<style lang="sass">
-
+<style lang="sass" scope>
+.range-date
+.q-menu
+  border-radius: 20px
 </style>

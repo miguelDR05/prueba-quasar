@@ -13,6 +13,7 @@
           <knob-card :item="item" :fontSize="'15px'" :classLabel="'text-grey-7'" class="q-mr-xs" />
         </div>
       </div>
+      {{ semanaModel }}
       <data-table :color="'negative'" filter-search btn-exportar-excel btn-full-screen :title="'Title table'" :data="rows"
         :columns="columns" flat btnFilterAdvance btnLoadTable :headerFilter="true" :separator="'horizontal'"
         :selection="'multiple'" :visibilityColumns="true" :options="opt">
@@ -25,9 +26,8 @@
             <range-date @select-range="selectRange" borderless />
           </div>
           <div class="col-12 col-xs-12 col-sm-6 col-md-4 col-lg-3">
-            <!-- {{ semanaModel }} -->
             <select-semana @emit-model="ObtenerSemana" multiple :data="response" :items="valores"
-              :default-item="{ item: 'here', value: 1 }"></select-semana>
+              :default-item="{ item: 'here', value: 1 }" map-options clereable ref="refSelectItems"></select-semana>
           </div>
         </template>
         <template v-slot:btn-right>
@@ -605,6 +605,7 @@ const valores: any = {
   value: 'semAnio',
   other: 'here',
 }
+const refSelectItems = ref<any>(null);
 /****************************************************************************/
 /*                           COMPOSABLE                                     */
 /****************************************************************************/
@@ -635,21 +636,23 @@ const listMatrizAcuerdos = async (filterGerenciaArea: boolean) => {
   }
 }
 const exportarListado = async () => {
-  alert('Export ->')
+  refSelectItems.value.alertaHijo()
 }
 
 const selectRange = async (fecha: any) => {
   fechaModel.value = fecha
   console.log(fecha);
 
-  listMatrizAcuerdos(true)
+  // listMatrizAcuerdos(true)
 }
-const ObtenerSemana = async (nsemana: Array<any> | string) => {
+const ObtenerSemana = async (nsemana: any) => {
+  console.log('recibir semana', nsemana);
+
   semanaModel.value = nsemana
 }
 
 onMounted(async () => {
-  await listMatrizAcuerdos(true)
+  // await listMatrizAcuerdos(true)
 })
 
 </script>

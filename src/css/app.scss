@@ -59,4 +59,21 @@ body.body--dark {
   color: #fff;
 }
 
+// estilos globales para los checkbox
+.q-checkbox__bg{
+  border-radius: 5px;
+}
+.q-checkbox__inner{
+  font-size: 30px;
+}
+// estilos globales para los chips
+.q-chip--square {
+  border-radius: 7px;
+}
+.q-chip--dense {
+  padding: 0 0.4em;
+}
+.q-chip__content{
+  font-size: 0.9em;
+}
 

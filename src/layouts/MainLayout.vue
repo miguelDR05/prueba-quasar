@@ -6,7 +6,8 @@
         <!-- <q-btn flat dense round icon="menu" aria-label="Menu" @click="leftDrawerOpen = !leftDrawerOpen" /> -->
 
         <q-toolbar-title class="row justify-start item-center">
-          <q-icon color="secondary" name="mdi-database-outline" size="md" />Registro de Materias
+          <q-icon color="primary" name="mdi-database-outline" size="md" />Registro
+          de Materias
         </q-toolbar-title>
         <!-- <q-btn flat size="sm" round :icon="iconTheme" @click="changeTheme()"></q-btn> -->
         <q-btn flat round icon="mdi-cog">

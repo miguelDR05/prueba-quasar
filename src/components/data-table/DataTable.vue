@@ -153,7 +153,8 @@
           btnFilterAdvance
           ">
           <div class="row items-center full-width q-py-sm q-px-lg">
-            <div class="q-table__title col-xs-12 col-sm-3 col-md-3 col-lg-3 text-grey-7" style="font-weight: 600;">
+            <div class="q-table__title col-xs-12 col-sm-3 col-md-3 col-lg-3"
+              :class="Dark.isActive ? 'text-grey-2' : 'text-grey-7'" style="font-weight: 600;">
               {{ title }}
               <span v-if="selection == 'multiple'">({{ selectedTable.length }}/{{ countRowsTable }})</span>
             </div>
@@ -232,7 +233,7 @@
             v-if="!hasBodyCellByColumSlot && !hasBodySlot">
             <q-td v-if="selection != 'none' && selection != undefined" auto-width class="ignore-elements">
               <q-checkbox color="primary" :key="props.row.ido" v-model="props.selected"
-                checked-icon="checkbox-marked-circle-outline" />lol
+                checked-icon="checkbox-marked-circle-outline" />
             </q-td>
             <q-td v-for="item in props.cols" :key="item.name" :props="props">
               {{ item.value }}oooo
@@ -857,19 +858,32 @@ const backgroundThead = ref('#fff')
 </script>
 <style lang="sass">
 
+$height-table: 65vh
+
+body.body--dark .my-sticky-virtscroll-table
+  border-color: rgba(255, 255, 255, 0.28)
+
+body.body--dark .hr__space
+  border-color: rgba(255, 255, 255, 0.28)
+
 .hr__space
-  border-bottom: 1px solid #ccc
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12)
 
 .my-sticky-virtscroll-table
   border: 1px solid rgba(0, 0, 0, 0.12)
   border-radius: 12px
   /* height or max-height is important */
-  // .q-table thead tr .q-table--dense .q-table tbody tr, tbody td
-  //   height: 40px
+  .q-table--dense
+    height: 35px
+  .q-table tr
+    margin: 4px
+    border: 1px solid #efa
   .q-table thead tr, .q-table tbody td
-    height: 40px
+    height: 45px
   .q-table__top
     padding: 0px
+  .q-table__bottom
+    min-height: 30px
   .q-table__middle
     margin-right: 5px
     // min-height: 65vh
@@ -897,7 +911,7 @@ const backgroundThead = ref('#fff')
     z-index: 100
     top: 0
     background-color: var(--q-thead)
-    height: 30px !important
+    height: 40px !important
   /* this will be the loading indicator */
   thead tr:last-child th
     /* height of all previous header rows */
@@ -905,8 +919,9 @@ const backgroundThead = ref('#fff')
   thead tr:first-child th
     top: 0
     font-weight: bold
-  // .q-table tbody td:before,.q-table tbody td:after
+  // .q-table tbody td:before, .q-table tbody td:after
   //   background: rgb(236,235,251,0.2)
+  //   margin: 4px
 
 .containerx
   background: red !important
@@ -926,12 +941,6 @@ const backgroundThead = ref('#fff')
 
 .q-table__container.fullscreen
   z-index: 2000 !important
-
-.q-checkbox__bg
-  border-radius: 5px
-
-.q-checkbox__inner
-  font-size: 35px
 
 </style>
 
