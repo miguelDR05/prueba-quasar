@@ -1,79 +1,76 @@
 <template>
-  <q-page style="min-height: 100% !important">
-    <div class="q-mx-lg">
-      <!-- <div class="row justify-around">
+  <q-page>
+    <!-- <div class="row justify-around">
         <div v-for="(item, index) in cabezera" :key="index" class="q-my-xs col-xs-12 col-sm-4 col-md-3 col-lg-2">
           <knob-card :item="item" :fontSize="'15px'" :classLabel="'text-grey-7'" class="q-mx-xs" />
         </div>
       </div> -->
-      <!-- <div>
+    <!-- <div>
         <custom-card>
           <template v-slot:btn-right>
             <q-btn dense round icon="mdi-eye" flat />
           </template>
         </custom-card>
       </div> -->
-      <data-table class="table2" dense flat filter-search btn-exportar-excel btn-full-screen :title="'Title table'"
-        :data="rows" :columns="columns" :separator="'none'">
-        <template v-slot:body-cell-calories="props">
-          <q-td :props="props">
-            <!-- <q-chip dense square :class="props.value < 10 ? 'fat-cell1' : 'fat-cell2'" :label="props.value"> -->
-            <colored-chips :label="props.value" dense square
-              :color="props.value.charAt(0) === '+' ? '#649382' : '#a27486'"
-              :background="props.value.charAt(0) === '+' ? '#ebfef8' : '#fff3f7'" border
-              :clickable="props.value.charAt(0) === '+'" @click="alerta('Aqui hago funcicones')">
-            </colored-chips>
-            <!-- <div class="" style="width: 20px">
+    <data-table class="table2" dense flat filter-search btn-exportar-excel btn-full-screen :title="'Title table'"
+      :data="rows" :columns="columns" :separator="'none'">
+      <template v-slot:body-cell-calories="props">
+        <q-td :props="props">
+          <!-- <q-chip dense square :class="props.value < 10 ? 'fat-cell1' : 'fat-cell2'" :label="props.value"> -->
+          <colored-chips :label="props.value" dense square :color="props.value.charAt(0) === '+' ? '#649382' : '#a27486'"
+            :background="props.value.charAt(0) === '+' ? '#ebfef8' : '#fff3f7'" border
+            :clickable="props.value.charAt(0) === '+'" @click="alerta('Aqui hago funcicones')">
+          </colored-chips>
+          <!-- <div class="" style="width: 20px">
                 <div>{{ props.value }}</div>
               </div> -->
-          </q-td>
-        </template>
-        <template v-slot:body-cell-name="props">
-          <q-td :props="props">
-            <colored-chips square @click="alerta('lol')">
-              <template v-slot:body>
-                <q-avatar @click="alerta('lol')">
-                  <img src="https://cdn.quasar.dev/img/boy-avatar.png">
-                </q-avatar>
-                {{ props.value }}
-                <q-tooltip>{{ props.value }}</q-tooltip>
-              </template>
-            </colored-chips>
-          </q-td>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-name="props">
+        <q-td :props="props">
+          <colored-chips square @click="alerta('lol')">
+            <template v-slot:body>
+              <q-avatar @click="alerta('lol')">
+                <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+              </q-avatar>
+              {{ props.value }}
+              <q-tooltip>{{ props.value }}</q-tooltip>
+            </template>
+          </colored-chips>
+        </q-td>
 
-        </template>
-        <template v-slot:body-cell-fat="props">
-          <q-td :props="props">
-            <colored-chips square :label="props.value" dense :icon="'star'" :color="'orange'" outline>
-            </colored-chips>
-          </q-td>
-        </template>
-        <template v-slot:body-cell-carbs="props">
-          <q-td :props="props">
-            <colored-chips dense :color="'#1a3'">
-              <template v-slot:body>
-                <q-avatar color="red" text-color="white" @click="alerta('lol')">
-                  C
-                </q-avatar>
-                {{ props.value }}%
-              </template>
-            </colored-chips>
-          </q-td>
-        </template>
-        <template v-slot:body-cell-sodium="props">
-          <q-td :props="props">
-            <colored-chips dense :color="'#495a69'" :background="'#aadadf'" :label="props.value" :icon-right="'cake'">
-            </colored-chips>
-          </q-td>
-        </template>
-        <template v-slot:body-cell-actions="props">
-          <q-td :props="props">
-            <q-btn flat dense icon="mdi-plus-thick" size="sm" color="primary" class="mini-btn"></q-btn>
-            <q-btn flat dense icon="delete" size="sm" color="negative" class="mini-btn"></q-btn>
-          </q-td>
-        </template>
-      </data-table>
-    </div>
+      </template>
+      <template v-slot:body-cell-fat="props">
+        <q-td :props="props">
+          <colored-chips square :label="props.value" dense :icon="'star'" :color="'orange'" outline>
+          </colored-chips>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-carbs="props">
+        <q-td :props="props">
+          <colored-chips dense :color="'#1a3'">
+            <template v-slot:body>
+              <q-avatar color="red" text-color="white" @click="alerta('lol')">
+                C
+              </q-avatar>
+              {{ props.value }}%
+            </template>
+          </colored-chips>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-sodium="props">
+        <q-td :props="props">
+          <colored-chips dense :color="'#495a69'" :background="'#aadadf'" :label="props.value" :icon-right="'cake'">
+          </colored-chips>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-actions="props">
+        <q-td :props="props">
+          <q-btn flat dense icon="mdi-plus-thick" size="sm" color="primary" class="mini-btn"></q-btn>
+          <q-btn flat dense icon="delete" size="sm" color="negative" class="mini-btn"></q-btn>
+        </q-td>
+      </template>
+    </data-table>
   </q-page>
 </template>
 

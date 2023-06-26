@@ -4,7 +4,7 @@
       options-dense :multiple="multiple" :clearable="clereable" @clear="clearSelect()"
       @blur="multiple ? changeItems(false) : ''" @filter="filterFn" :use-input="filter" borderless map-options
       class="select-items" @update:model-value="!multiple ? changeItems(false) : ''"
-      options-selected-class="text-deep-orange">
+      :options-selected-class="Dark.isActive ? 'text-secondary' : 'text-primary'">
       <template v-slot:prepend>
         <q-icon :name="icon" :color="Dark.isActive ? 'secondary' : 'primary'" class="selectItems" />
       </template>
@@ -201,6 +201,7 @@ const clearSelect = () => {
   allItems.value = false
   clean.value = true
   changeItems(true)
+  // emit('emitModel', modelSelect.value)
 }
 
 // Exponer la referencia al componente

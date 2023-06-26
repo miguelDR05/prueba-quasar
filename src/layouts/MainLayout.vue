@@ -1,37 +1,35 @@
 <template>
   <q-layout view="lHr Lpr lff">
-    <q-header :class="Dark.isActive ? 'text-white bg-dark' : 'background-toolbar'" style="z-index: 100;">
+    <q-header :class="Dark.isActive ? 'background-head-dark' : 'background-head-light'" style="z-index: 100;">
       <q-toolbar style="padding: 10px 25px">
         <!-- class="text-white toolbar1" -->
-        <!-- <q-btn flat dense round icon="menu" aria-label="Menu" @click="leftDrawerOpen = !leftDrawerOpen" /> -->
+        <q-btn flat dense round icon="menu" aria-label="Menu" @click="leftDrawerOpen = !leftDrawerOpen" />
 
-        <q-toolbar-title class="row justify-start item-center">
-          <q-icon color="primary" name="mdi-database-outline" size="md" />Registro
-          de Materias
+        <q-toolbar-title class="row justify-start item-center text-hidden" :style="Screen.xs ? 'font-size:18px' : ''">
+          <!-- <q-icon color="primary" name="mdi-database-outline" size="md" /> -->
+          {{ route.name }}
         </q-toolbar-title>
         <!-- <q-btn flat size="sm" round :icon="iconTheme" @click="changeTheme()"></q-btn> -->
         <q-btn flat round icon="mdi-cog">
           <q-menu fit @update:model-value="limpiarColores">
             <div class="row no-wrap q-pa-md">
               <div class="column" style="width: 200px">
-                <div class="text-h6">Configuraciones</div>
-                <q-separator class="q-mb-md" />
-                <!-- <q-toggle v-model="themeDark" label="Tema Dark" /> -->
-                <!-- <q-toggle v-model="miniSidebar" label="Mini Sidebar" /> -->
+                <div class="text-h6 q-mb-sm">Configuraciones</div>
+                <!-- <q-separator class="q-mb-md" /> -->
                 <div class="q-gutter-sm">
-                  <q-btn round class="toolbar1" icon="colorize">
+                  <q-btn round class="toolbar1" icon="mdi-format-color-highlight">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                       <q-color v-model="primaryColor" @update:model-value="changeColorBarra(primaryColor, 1)" />
                       <!--   @update:model-value="changeColorBarra(primaryColor, 1)" -->
                     </q-popup-proxy>
                   </q-btn>
-                  <q-btn round class="toolbar2" icon="colorize">
+                  <q-btn round class="toolbar2" icon="mdi-format-color-highlight">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                       <q-color v-model="secondaryColor" @update:model-value="changeColorBarra(secondaryColor, 2)" />
                       <!-- @update:model-value="changeColorBarra(secondaryColor, 2)"  -->
                     </q-popup-proxy>
                   </q-btn>
-                  <q-btn color="primary" no-caps label="Guardar Cambios" size="small" v-close-popup
+                  <q-btn :color="'primary'" no-caps label="Guardar Cambios" size="small" v-close-popup
                     @click="resetSaveColor(false)" />
                   <q-btn push color="primary" round icon="mdi-restore" v-close-popup @click="resetSaveColor(true)">
                     <q-tooltip transition-show="scale" transition-hide="scale">
@@ -44,10 +42,10 @@
               <q-separator vertical class="q-mx-md" />
 
               <div class="column items-center">
-                <q-avatar size="72px">
+                <q-avatar size="72px" class="cursor-pointer" @click="$router.push('/perfil')">
                   <!-- <q-icon name="mdi-account-circle" color="grey" size="72px" />-->
 
-                  <img src="https://drive.google.com/uc?export=download&id=1ticnzRbZ1dnKkAmiNFzF-YFc-0DRLEAk" />
+                  <img :src="'https://drive.google.com/uc?export=download&id=' + profilePicture" />
                 </q-avatar>
 
                 <div class="text-subtitle1 q-mt-sm q-mb-xs">
@@ -62,7 +60,6 @@
         </q-btn>
       </q-toolbar>
     </q-header>
-
     <q-drawer v-model="leftDrawerOpen" show-if-above :breakpoint="1160" bordered :width="250"
       :mini="!leftDrawerOpen || miniState" @click.capture="drawerClick" :mini-width="70">
       <!--mini-to-overlay @mouseover="miniState = false" @mouseout="miniState = true" -->
@@ -72,7 +69,7 @@
           <q-item-label class="text-weight-medium text-subtitle1 q-px-md q-py-sm">
             <q-avatar size="46px" class="cursor-pointer" @click="$router.push('/perfil')">
               <!-- <q-icon name="mdi-account-circle" color="" size="30px" /> -->
-              <img src="https://drive.google.com/uc?export=download&id=1ticnzRbZ1dnKkAmiNFzF-YFc-0DRLEAk" />
+              <img :src="'https://drive.google.com/uc?export=download&id=' + profilePicture" />
               <q-badge color="positive" floating
                 style="border:1px solid #fff; border-radius: 50%; position: absolute; z-index: 100; top: 30px;"></q-badge>
             </q-avatar>
@@ -87,7 +84,7 @@
           <div class="text-center q-pt-sm">
             <!-- <q-btn dense unelevated :icon="Dark.mode ? 'dark_mode' : 'light_mode'" @click="Dark.toggle()" /> -->
             <q-toggle dense v-model="modeState" color="secondary" keep-color size="xl"
-              :icon="Dark.mode ? 'dark_mode' : 'light_mode'" @click="Dark.toggle()" />
+              :icon="Dark.mode ? 'mdi-weather-sunny' : 'mdi-weather-night'" @click="Dark.toggle()" />
             <!-- <q-btn unelevated icon="light_mode" @click="Dark.set(false)" /> -->
             <!-- <q-btn unelevated icon="dark_mode" @click="Dark.set(true)" /> -->
           </div>
@@ -98,7 +95,7 @@
       </div>
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container style="max-height: 100%;">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -110,7 +107,7 @@ import { ref, watch, onMounted, onUpdated } from 'vue';
 import { Dark } from 'quasar';
 import MenuLink from '@/components/MenuLink.vue';
 import { useConfigUserStore } from '@stores/config-user';
-import { Loading, setCssVar } from 'quasar';
+import { Loading, setCssVar, Screen } from 'quasar';
 
 /****************************************************************************/
 /*                               VARIABLES                                  */
@@ -119,6 +116,7 @@ import { Loading, setCssVar } from 'quasar';
 const storex = useConfigUserStore();
 // router
 const router = useRouter();
+const route = useRoute()
 // colors
 const primaryColor = ref()
 const secondaryColor = ref()
@@ -149,6 +147,7 @@ const itemsMenu = ref([
         code: "gpr-act-dash",
         icon: "mdi-view-dashboard",
         link: "/",
+        name: "home",
         sequence: 1,
         parentId: "e5928a89-8221-4ff7-a8d1-099174454fb4",
         children: []
@@ -160,6 +159,7 @@ const itemsMenu = ref([
         code: "gpr-act-act_reu",
         icon: "mdi-book-open-variant",
         link: "/asistencia",
+        name: "asistencia",
         sequence: 2,
         parentId: "e5928a89-8221-4ff7-a8d1-099174454fb4",
         children: []
@@ -317,7 +317,7 @@ const itemsMenu = ref([
   }
 ])
 const usuario = ref('Miguel');
-
+const profilePicture = ref<string>('1T1iylp1_q8aveqTcAk_pLwgSGSC7kZCL')
 /****************************************************************************/
 /*                              METHODS                                     */
 /****************************************************************************/
@@ -334,8 +334,8 @@ const getConfigUser = async (loadColor: boolean) => {
   // PETICION
   const data = {
     config: {
-      sidebarColor: '#495a69',
-      themeColor: '#aadadf',
+      sidebarColor: '#2c698d',
+      themeColor: '#bae8e8',
     }
   }
   document.body.style.setProperty('--primary', data.config.sidebarColor)
@@ -367,18 +367,20 @@ const resetSaveColor = async (reset: boolean) => {
 }
 const changeColorBarra = async (val: any, item: any) => {
   await document.body.style.setProperty(item === 1 ? '--primary' : '--secondary', val);
-  // if (item == 1) setCssVar('primary', val);
+  setCssVar(item === 1 ? 'primary' : 'secondary', val);
 }
 const limpiarColores = async (val: boolean) => {
   console.log(val, 'limpiar colores');
   if (!val) {
     await document.body.style.setProperty('--primary', primaryColorAux.value);
-    // setCssVar('primary', primaryColorAux.value);
+    setCssVar('primary', primaryColorAux.value);
     await document.body.style.setProperty('--secondary', secondaryColorAux.value);
+    setCssVar('secondary', secondaryColorAux.value);
     primaryColor.value = primaryColorAux.value;
     secondaryColor.value = secondaryColorAux.value;
   }
 }
+
 const logout = () => {
   localStorage.clear();
   storex.updatePermisos([]);

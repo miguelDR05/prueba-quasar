@@ -11,12 +11,16 @@
   --q-toolbar2: #aadadf;
   --q-thead: white;
   --height-table: 57vh;
-  --primary: #495a69;
-  --secondary: #aadadf;
+  --primary: #2c698d; //#495a69
+  --secondary: #e3f6f5; //#aadadf
 }
-.background-toolbar {
-  background: #fcfbfe !important;
+.background-head-light{
+  background: #fcfbfe;
   color: #1D1D1D;
+}
+.background-head-dark {
+  background: #121212;
+  color: #fcfbfe;
 }
 .text-primary {
   color: var(--primary) !important;
@@ -25,7 +29,7 @@
   color: var(--secondary) !important;
 }
 .toolbar1 {
-  background: var(--q-toolbar1) !important;
+  background: var(--primary) !important;
   color: white;
 }
 .toolbar2 {
@@ -34,22 +38,31 @@
 }
 body{
   font-family: 'Poppins', sans-serif;
-  height: 100%
+  height: 100%;
 }
+// tema light y dark
 .body--light {
   background-color: #fcfbfe;
   // background-color: #303030;
-  color: #000;
+  color: #757575;
+}
+.body--dark {
+  background-color: $dark;
+  color: #fcfbfe;
+}
+.q-page{
+  margin-left: 24px;
+  margin-right: 24px;
+}
+.text-hidden{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-body.body--dark {
-  background-color: $dark;
-  color: #fff;
-}
 .bg-tool-tip{
   color: #fcfbfe;
-  background-color: $secondary;
-  font-weight: 700;
+  background-color: $primary;
 }
 .btn-drawer{
   color: #7d7c81;

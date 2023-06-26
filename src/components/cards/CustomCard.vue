@@ -1,7 +1,8 @@
 <template>
   <div>
-    <q-card class="my-card row justify-center items-center" flat bordered>
-      <q-card-section horizontal>
+    <q-card class="my-card" :class="template ? 'row justify-center items-center' : ''" flat bordered
+      :style="'max-width:' + maxWidth">
+      <q-card-section horizontal v-if="template">
         <slot name="header"></slot>
         <q-card-section class="row col-4 items-center justify-center">
           <q-icon name="mdi-cube-outline" size="sm" class="icon" />
@@ -18,22 +19,44 @@
           <slot name="bottom"></slot>
         </q-card-section>
       </q-card-section>
-
+      <slot name="content"></slot>
     </q-card>
   </div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
 
-const lorem = ref('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.')
-
+interface Props {
+  showValue?: boolean;
+  fontSize?: string;
+  size?: string;
+  trackColor?: string;
+  customlClass?: string;
+  classLabel?: string;
+  item?: any;
+  icon?: boolean;
+  // otrhe props
+  color?: string;
+  template?: boolean;
+  maxWidth?: string;
+}
+withDefaults(defineProps<Props>(), {
+  showValue: true,
+  fontSize: "15px",
+  size: "70px",
+  trackColor: "grey-3",
+  customlClass: "q-ma-none",
+  classLabel: "text-subtitle1 text-grey-7",
+  template: false,
+  maxWidth: '',
+});
 </script>
 <style lang="sass" scoped>
 .my-card
-  padding: 5px
+  margin-top: 16px
+  padding: 24px
   width: 100%
-  max-width: 270px
-  border-radius: 18px
+  border-radius: 20px
 .icon
   border-radius: 8px
   padding: 16px

@@ -1,186 +1,187 @@
 <template>
   <div>
-    <div>
-      <q-table :title="title" :columns="headerTable" :rows="rowsFilterTable" :row-key="row_key ? row_key : 'ido'"
-        :dense="dense" :flat="flat" class="my-sticky-virtscroll-table q-mb-md" :table-style="tableStyle"
-        :rows-per-page-options="[0]" :filter="filter" :loading="loadingTable" :separator="separator"
-        :selection="selection" v-model:selected="selectedTable" :virtual-scroll="true"
-        :visible-columns="headerVisibleColumns" :virtual-scroll-sticky-size-start="8" @selection="selectRow"
-        @row-contextmenu="handleEvent">
-        <!-- @row-contextmenu="handleEvent" -->
-        <!-- header -->
-        <template v-slot:header="props">
-          <q-tr :props="props" v-if="!hasHeaderSlot">
-            <!--<q-th auto-width class="ignore-elements"> </q-th>-->
-            <q-th auto-width class="ignore-elements" v-if="selection != 'none' && selection != undefined">
-              <q-checkbox color="primary" v-model="props.selected" />
-            </q-th>
-            <q-th :props="props" v-for="col in props.cols" :key="col['name']"
-              @contextmenu="filterContextMenu($event, col.name)">
-              <div class="row inline justify-center items-center">
-                <div class="column" v-if="headerFilter &&
-                  col['hasFilter'] &&
-                  col.hasOwnProperty('hasFilter')
-                  ">
-                  <q-btn flat dense size="sm" class="q-ml-xs" @click.stop="">
-                    <q-icon name="mdi-cube-outline" color="red"></q-icon>
-                  </q-btn>
-                </div>
+    <q-table :title="title" :columns="headerTable" :rows="rowsFilterTable" :row-key="row_key ? row_key : 'ido'"
+      :dense="dense" :flat="flat" class="my-sticky-virtscroll-table q-my-sm" :table-style="tableStyle"
+      :rows-per-page-options="[0]" :filter="filter" :loading="loadingTable" :separator="separator" :selection="selection"
+      v-model:selected="selectedTable" :virtual-scroll="true" :visible-columns="headerVisibleColumns"
+      :virtual-scroll-sticky-size-start="8" @selection="selectRow" @row-contextmenu="handleEvent">
+      <!-- @row-contextmenu="handleEvent" -->
+      <!-- header -->
+      <template v-slot:header="props">
+        <q-tr :props="props" v-if="!hasHeaderSlot">
+          <!--<q-th auto-width class="ignore-elements"> </q-th>-->
+          <q-th auto-width class="ignore-elements" v-if="selection != 'none' && selection != undefined">
+            <q-checkbox color="primary" v-model="props.selected" />
+          </q-th>
+          <q-th :props="props" v-for="col in props.cols" :key="col['name']"
+            @contextmenu="filterContextMenu($event, col.name)">
+            <div class="row inline justify-center items-center">
+              <div class="column" v-if="headerFilter &&
+                col['hasFilter'] &&
+                col.hasOwnProperty('hasFilter')
+                ">
+                <q-btn flat dense size="sm" class="q-ml-xs" @click.stop="">
+                  <q-icon name="mdi-cube-outline" color="red"></q-icon>
+                </q-btn>
+              </div>
 
-                <div class="column">
-                  &nbsp;&nbsp;
-                  {{ col['label'] }}
-                </div>
-                <q-menu context-menu>
-                  <q-tabs v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary"
-                    align="justify" narrow-indicator>
-                    <q-tab name="filters">
-                      <q-icon name="filter_list" size="10"></q-icon>
-                    </q-tab>
-                    <q-tab name="fixed_columns">
-                      <q-icon name="table_rows" size="10"></q-icon>
-                    </q-tab>
-                    <q-tab name="visibility_columns">
-                      <q-icon name="view_week" size="10"></q-icon>
-                    </q-tab>
-                  </q-tabs>
-                  <q-separator />
-                  <q-tab-panels v-model="tab" animated>
-                    <q-tab-panel name="filters">
-                      <q-card flat>
-                        <q-input rounded dense label-slot style="width: 100%" clearable
-                          @update:model-value="nextSearchFilterByColumn($event)" v-model="txtSearchByColumn">
-                          <template v-slot:label>
-                            <span class="text-weight-bold text-red-9">Buscar {{ txtSearchByColumn }}</span>
-                          </template>
-                        </q-input>
-                        <div id="virtual-scroll-target" class="scroll"
-                          style="height: 280px; width: 380px; margin-top: 10px">
-                          <div class="" style="
+              <div class="column">
+                &nbsp;&nbsp;
+                {{ col['label'] }}
+              </div>
+              <q-menu context-menu>
+                <q-tabs v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary"
+                  align="justify" narrow-indicator>
+                  <q-tab name="filters">
+                    <q-icon name="filter_list" size="10"></q-icon>
+                  </q-tab>
+                  <q-tab name="fixed_columns">
+                    <q-icon name="table_rows" size="10"></q-icon>
+                  </q-tab>
+                  <q-tab name="visibility_columns">
+                    <q-icon name="view_week" size="10"></q-icon>
+                  </q-tab>
+                </q-tabs>
+                <q-separator />
+                <q-tab-panels v-model="tab" animated>
+                  <q-tab-panel name="filters">
+                    <q-card flat>
+                      <q-input rounded dense label-slot style="width: 100%" clearable
+                        @update:model-value="nextSearchFilterByColumn($event)" v-model="txtSearchByColumn">
+                        <template v-slot:label>
+                          <span class="text-weight-bold text-red-9">Buscar {{ txtSearchByColumn }}</span>
+                        </template>
+                      </q-input>
+                      <div id="virtual-scroll-target" class="scroll"
+                        style="height: 280px; width: 380px; margin-top: 10px">
+                        <div class="" style="
                               position: sticky;
                               opacity: 1;
                               z-index: 1;
                               top: 0;
                             ">
-                            <li style="
+                          <li style="
                                 display: block;
                                 line-height: 1.9;
                                 border-bottom: 1px solid #abc;
                               ">
-                              <q-checkbox dense size="sm" color="primary" :label="'Seleccionar Todos'" :model-value="listFilterTable.length ==
-                                listFilterTable.filter((e: any) => e.isActive).length
-                                ? true
-                                : listFilterTable.filter((e: any) => e.isActive)
-                                  .length == 0
-                                  ? false
-                                  : null
-                                " @update:model-value="
+                            <q-checkbox dense size="sm" color="primary" :label="'Seleccionar Todos'" :model-value="listFilterTable.length ==
+                              listFilterTable.filter((e: any) => e.isActive).length
+                              ? true
+                              : listFilterTable.filter((e: any) => e.isActive)
+                                .length == 0
+                                ? false
+                                : null
+                              " @update:model-value="
     updateModelValue($event, col.field)
     "></q-checkbox>
-                            </li>
-                          </div>
+                          </li>
+                        </div>
 
-                          <q-virtual-scroll scroll-target="#virtual-scroll-target" :items="listFilterTable" separator
-                            v-slot="{ item }">
-                            <li style="
+                        <q-virtual-scroll scroll-target="#virtual-scroll-target" :items="listFilterTable" separator
+                          v-slot="{ item }">
+                          <li style="
                                 display: block;
                                 line-height: 1.9;
                                 border-bottom: 1px solid #abc;
                               ">
-                              <q-checkbox dense v-model="item.isActive" size="sm" color="primary"
-                                :label="item.value"></q-checkbox>
-                            </li>
-                          </q-virtual-scroll>
-                        </div>
-
-                        <q-card-actions class="justify-around">
-                          <q-btn flat color="red"> Cerrar </q-btn>
-
-                          <q-btn @click="aceptFilter" flat size="10" color="primary">
-                            Aceptar
-                          </q-btn>
-                        </q-card-actions>
-                      </q-card>
-                    </q-tab-panel>
-
-                    <q-tab-panel name="fixed_columns">
-                      <q-card flat>
-                        <div class="container" style="height: 300px; width: 380px; margin-top: 10px">
-                          FIJAR COLUMNAS
-                        </div>
-                      </q-card>
-                    </q-tab-panel>
-
-                    <q-tab-panel name="visibility_columns">
-                      <div v-if="visibleColumns.length == 0" class="container"
-                        style="height: 300px; width: 380px; margin-top: 10px">
-                        {{
-                          visibleColumns.length == 0
-                          ? 'Filtro de columnas visibles no disponible'
-                          : ''
-                        }}
+                            <q-checkbox dense v-model="item.isActive" size="sm" color="primary"
+                              :label="item.value"></q-checkbox>
+                          </li>
+                        </q-virtual-scroll>
                       </div>
-                      <q-card flat>
-                        <q-list>
-                          <q-item tag="label" dense v-for="(item, i) in visibleColumns" :key="i">
-                            <q-item-section>
-                              <q-item-label>{{
-                                visibleColumns[i].label
-                              }}</q-item-label>
-                            </q-item-section>
-                            <q-item-section side>
-                              <q-toggle color="primary" v-model="headerVisibleColumnsTemp" :val="visibleColumns[i].name"
-                                @update:model-value="aceptVisibleColumns" />
-                            </q-item-section>
-                          </q-item>
-                        </q-list>
-                      </q-card>
-                    </q-tab-panel>
-                  </q-tab-panels>
-                </q-menu>
-              </div>
-            </q-th>
-          </q-tr>
 
-          <slot name="header" v-bind:cols="props.cols"> </slot>
-        </template>
+                      <q-card-actions class="justify-around">
+                        <q-btn flat color="red"> Cerrar </q-btn>
 
-        <!-- top -->
-        <template v-slot:top="props" v-if="btnExportarExcel ||
-          btnFullScreen ||
-          filterSearch ||
-          btnLoadTable ||
-          btnFilterAdvance
-          ">
-          <div class="row items-center full-width q-py-sm q-px-lg">
-            <div class="q-table__title col-xs-12 col-sm-3 col-md-3 col-lg-3"
-              :class="Dark.isActive ? 'text-grey-2' : 'text-grey-7'" style="font-weight: 600;">
-              {{ title }}
-              <span v-if="selection == 'multiple'">({{ selectedTable.length }}/{{ countRowsTable }})</span>
+                        <q-btn @click="aceptFilter" flat size="10" color="primary">
+                          Aceptar
+                        </q-btn>
+                      </q-card-actions>
+                    </q-card>
+                  </q-tab-panel>
+
+                  <q-tab-panel name="fixed_columns">
+                    <q-card flat>
+                      <div class="container" style="height: 300px; width: 380px; margin-top: 10px">
+                        FIJAR COLUMNAS
+                      </div>
+                    </q-card>
+                  </q-tab-panel>
+
+                  <q-tab-panel name="visibility_columns">
+                    <div v-if="visibleColumns.length == 0" class="container"
+                      style="height: 300px; width: 380px; margin-top: 10px">
+                      {{
+                        visibleColumns.length == 0
+                        ? 'Filtro de columnas visibles no disponible'
+                        : ''
+                      }}
+                    </div>
+                    <q-card flat>
+                      <q-list>
+                        <q-item tag="label" dense v-for="(item, i) in visibleColumns" :key="i">
+                          <q-item-section>
+                            <q-item-label>{{
+                              visibleColumns[i].label
+                            }}</q-item-label>
+                          </q-item-section>
+                          <q-item-section side>
+                            <q-toggle color="primary" v-model="headerVisibleColumnsTemp" :val="visibleColumns[i].name"
+                              @update:model-value="aceptVisibleColumns" />
+                          </q-item-section>
+                        </q-item>
+                      </q-list>
+                    </q-card>
+                  </q-tab-panel>
+                </q-tab-panels>
+              </q-menu>
             </div>
-            <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
-              <!-- aqui hira lo que querramosp poner desde nuestro componente padre en la parte derecha -->
-              <div class="row items-center justify-end q-gutter-x-sm">
-                <slot name="btn-left"></slot>
-              </div>
+          </q-th>
+        </q-tr>
+
+        <slot name="header" v-bind:cols="props.cols"> </slot>
+      </template>
+
+      <!-- top -->
+      <template v-slot:top="props" v-if="btnExportarExcel ||
+        btnFullScreen ||
+        filterSearch ||
+        btnLoadTable ||
+        btnFilterAdvance
+        ">
+        <div class="row items-center full-width " style="padding: 10px 22px;">
+          <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+            <!-- :class="Dark.isActive ? 'text-grey-2' : 'text-grey-7'" -->
+            <div class="row justify-start items-center">
+              <img v-if="imgHead" class="q-mr-xs" style="width: 25px" :src="imgHeadSrc">
+              <div :class="Screen.xs ? 'text-subtitle1' : 'q-table__title'">{{ title }}</div>
+              <!-- <span v-if="selection == 'multiple'">({{ selectedTable.length }}/{{ countRowsTable }})</span> -->
             </div>
           </div>
-          <div class="full-width hr__space"></div>
-          <div class="row items-center full-width justify-end" style="padding: 0px 22px;">
-            <div class="col-12 col-xs-12 col-sm-6 col-md-6 col-lg-6 row justify-start">
-              <div>
-                <q-input dense borderless v-model="filter" @update:model-value="nextSearchFilter($event)"
-                  placeholder="Buscar en el listado" v-if="filterSearch">
-                  <template v-slot:prepend>
-                    <q-icon v-if="filter !== ''" name="close" @click="filter = ''" class="cursor-pointer" />
-                    <q-icon name="search" />
-                  </template>
-                </q-input>
-              </div>
+          <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
+            <!-- aqui hira lo que querramosp poner desde nuestro componente padre en la parte derecha -->
+            <div class="row items-center justify-end q-gutter-y-xs">
+              <slot name="btn-left"></slot>
             </div>
-            <div class="col-12 col-xs-12 col-sm-6 col-md-6 col-lg-6 row justify-end items-center">
-              <!-- <div class="col-12 col-md-6 col-lg-5 row"> -->
-              <!-- <div :class="drawerFilters ? 'gt-lg' : 'gt-sm col-md-6 col-lg-7'">
+          </div>
+        </div>
+        <div class="full-width hr__space"></div>
+        <div class="row items-center full-width justify-end" style="padding: 0px 22px;">
+          <div class="col-12 col-xs-12 col-sm-6 col-md-6 col-lg-6 row justify-start">
+            <div>
+              <q-input dense borderless v-model="filter" @update:model-value="nextSearchFilter($event)"
+                placeholder="Buscar en el listado" v-if="filterSearch">
+                <template v-slot:prepend>
+                  <q-icon v-if="filter !== ''" name="close" @click="filter = ''" class="cursor-pointer" />
+                  <q-icon name="search" />
+                </template>
+              </q-input>
+            </div>
+          </div>
+          <div class="col-12 col-xs-12 col-sm-6 col-md-6 col-lg-6 row justify-end items-center">
+            <!-- <div class="col-12 col-md-6 col-lg-5 row"> -->
+            <!-- <div :class="drawerFilters ? 'gt-lg' : 'gt-sm col-md-6 col-lg-7'">
                 <q-input dense borderless v-model="filter" @update:model-value="nextSearchFilter($event)" label-slot
                   v-if="filterSearch">
                   <template v-slot:label>
@@ -193,114 +194,111 @@
                   </template>
                 </q-input>
               </div> -->
-              <!-- <div> -->
-              <q-btn round flat icon="mdi-microsoft-excel" class="q-ml-sm" v-if="btnExportarExcel"
-                :color="Dark.isActive ? 'secondary' : 'primary'">
-                <q-tooltip class="bg-tool-tip" anchor="center left" self="center right" :offset="[10, 10]">
-                  Exportar Excel
-                </q-tooltip>
-              </q-btn>
-              <q-btn round flat :icon="'mdi-autorenew'" class="q-ml-sm" v-if="btnLoadTable" @click.prevent="refresh"
-                :color="Dark.isActive ? 'secondary' : 'primary'">
-                <q-tooltip class="bg-tool-tip" anchor="center left" self="center right" :offset="[10, 10]">
-                  Refrescar
-                </q-tooltip>
-              </q-btn>
-              <q-btn round flat :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'
-                " @click="props.toggleFullscreen" class="q-ml-sm" v-if="btnFullScreen"
-                :color="Dark.isActive ? 'secondary' : 'primary'">
-                <q-tooltip class="bg-tool-tip" anchor="center left" self="center right" :offset="[10, 10]">
-                  {{ props.inFullscreen ? 'Cerrar Pantalla' : 'Pantalla Completa' }}
-                </q-tooltip>
-              </q-btn>
-              <q-btn flat round :icon="'mdi-filter-outline'" @click="openDrawerOfFilters" class="q-ml-sm"
-                v-if="btnFilterAdvance" :color="Dark.isActive ? 'secondary' : 'primary'">
-                <q-tooltip class="bg-tool-tip" anchor="center left" self="center right" :offset="[10, 10]">
-                  Filtrar
-                </q-tooltip>
-              </q-btn>
-              <slot name="btn-right"></slot>
-              <!-- </div> -->
+            <!-- <div> -->
+            <q-btn round flat icon="mdi-microsoft-excel" class="q-ml-sm" v-if="btnExportarExcel" color="primary">
+              <!-- :color="Dark.isActive ? 'secondary' : 'primary'" -->
+              <q-tooltip class="bg-tool-tip" anchor="center left" self="center right" :offset="[10, 10]">
+                Exportar Excel
+              </q-tooltip>
+            </q-btn>
+            <q-btn round flat :icon="'mdi-autorenew'" class="q-ml-sm" v-if="btnLoadTable" @click.prevent="refresh"
+              color="primary">
+              <q-tooltip class="bg-tool-tip" anchor="center left" self="center right" :offset="[10, 10]">
+                Refrescar
+              </q-tooltip>
+            </q-btn>
+            <q-btn round flat :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'
+              " @click="props.toggleFullscreen" class="q-ml-sm" v-if="btnFullScreen" color="primary">
+              <q-tooltip class="bg-tool-tip" anchor="center left" self="center right" :offset="[10, 10]">
+                {{ props.inFullscreen ? 'Cerrar Pantalla' : 'Pantalla Completa' }}
+              </q-tooltip>
+            </q-btn>
+            <q-btn flat round :icon="'mdi-filter-outline'" @click="openDrawerOfFilters" class="q-ml-sm"
+              v-if="btnFilterAdvance" color="primary">
+              <q-tooltip class="bg-tool-tip" anchor="center left" self="center right" :offset="[10, 10]">
+                Filtrar
+              </q-tooltip>
+            </q-btn>
+            <slot name="btn-right"></slot>
+            <!-- </div> -->
 
-              <!-- </div> -->
-            </div>
+            <!-- </div> -->
           </div>
-          <div class="full-width hr__space"></div>
-        </template>
-        <!-- body -->
-        <template v-slot:body="props" v-if="!hasBodyCellByColumSlot">
-          <q-tr :props="props" @contextmenu="onContextMenuForRow($event, props.row)" class="cursor-pointer"
-            v-if="!hasBodyCellByColumSlot && !hasBodySlot">
-            <q-td v-if="selection != 'none' && selection != undefined" auto-width class="ignore-elements">
-              <q-checkbox color="primary" :key="props.row.ido" v-model="props.selected"
-                checked-icon="checkbox-marked-circle-outline" />
-            </q-td>
-            <q-td v-for="item in props.cols" :key="item.name" :props="props">
-              {{ item.value }}oooo
-            </q-td>
-          </q-tr>
-          <!--<slot name="body" v-bind="props" v-if="!hasBodySlot"></slot>-->
-          <q-popup-proxy context-menu>
-            <q-list dense style="min-width: 100px">
-              <q-item clickable v-close-popup>
-                <q-item-section>Copiar</q-item-section>
-              </q-item>
-              <q-item clickable v-close-popup>
-                <q-item-section>Copiar con Cabecera</q-item-section>
-              </q-item>
-              <q-separator />
-              <q-item clickable>
-                <q-item-section>Exportar</q-item-section>
-                <q-item-section side>
-                  <q-icon name="keyboard_arrow_right" />
-                </q-item-section>
-
-                <q-menu anchor="top end" self="top start">
-                  <q-list>
-                    <q-item v-for="n in 3" :key="n" dense clickable>
-                      <q-item-section>Exportar</q-item-section>
-                    </q-item>
-                  </q-list>
-                </q-menu>
-              </q-item>
-            </q-list>
-          </q-popup-proxy>
-        </template>
-
-        <template v-for="(_, slot) of slots" v-slot:[`${slot.toString()}`]="scope" :key="`key-${slot}`">
-          <slot :name="slot" v-bind="scope" />
-          <q-menu anchor="top right" context-menu self="top right">
-            <q-list dense style="min-width: 100px" v-if="haveOptions(scope.row)">
-              <data-table-option :options="optionsTable" :row="scope.row"
-                @optionAction="optionAction"></data-table-option>
-            </q-list>
-          </q-menu>
-          <!--<q-popup-proxy context-menu>-->
-          <!--</q-popup-proxy>-->
-        </template>
-
-        <!-- loading -->
-        <template v-slot:loading>
-          <q-inner-loading showing color="primary" />
-        </template>
-      </q-table>
-    </div>
-    <!-- aqui ponemos filtros personalizados para busacar en la tabla -->
-    <q-drawer side="right" v-model="drawerFilters" :width="350" :breakpoint="fullscreen ? 7000 : 300" color="primary"
-      class="drawer-index" overlay bordered>
-      <div class="">
-        <q-toolbar class="q-ma-xs">
-          <q-toolbar-title>Búsqueda por filtros</q-toolbar-title>
-          <q-btn flat rounded @click.prevent="closeDrawerOfFilters" round dense icon="close" />
-        </q-toolbar>
-        <q-separator></q-separator>
-
-        <div>
-          <slot name="filter"></slot>
         </div>
-      </div>
-    </q-drawer>
+        <div class="full-width hr__space"></div>
+      </template>
+      <!-- body -->
+      <template v-slot:body="props" v-if="!hasBodyCellByColumSlot">
+        <q-tr :props="props" @contextmenu="onContextMenuForRow($event, props.row)" class="cursor-pointer"
+          v-if="!hasBodyCellByColumSlot && !hasBodySlot">
+          <q-td v-if="selection != 'none' && selection != undefined" auto-width class="ignore-elements">
+            <q-checkbox color="primary" :key="props.row.ido" v-model="props.selected"
+              checked-icon="checkbox-marked-circle-outline" />
+          </q-td>
+          <q-td v-for="item in props.cols" :key="item.name" :props="props">
+            {{ item.value }}
+          </q-td>
+        </q-tr>
+        <!--<slot name="body" v-bind="props" v-if="!hasBodySlot"></slot>-->
+        <q-popup-proxy context-menu>
+          <q-list dense style="min-width: 100px">
+            <q-item clickable v-close-popup>
+              <q-item-section>Copiar</q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup>
+              <q-item-section>Copiar con Cabecera</q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item clickable>
+              <q-item-section>Exportar</q-item-section>
+              <q-item-section side>
+                <q-icon name="keyboard_arrow_right" />
+              </q-item-section>
+
+              <q-menu anchor="top end" self="top start">
+                <q-list>
+                  <q-item v-for="n in 3" :key="n" dense clickable>
+                    <q-item-section>Exportar</q-item-section>
+                  </q-item>
+                </q-list>
+              </q-menu>
+            </q-item>
+          </q-list>
+        </q-popup-proxy>
+      </template>
+
+      <template v-for="(_, slot) of slots" v-slot:[`${slot.toString()}`]="scope" :key="`key-${slot}`">
+        <slot :name="slot" v-bind="scope" />
+        <q-menu anchor="top right" context-menu self="top right">
+          <q-list dense style="min-width: 100px" v-if="haveOptions(scope.row)">
+            <data-table-option :options="optionsTable" :row="scope.row" @optionAction="optionAction"></data-table-option>
+          </q-list>
+        </q-menu>
+        <!--<q-popup-proxy context-menu>-->
+        <!--</q-popup-proxy>-->
+      </template>
+
+      <!-- loading -->
+      <template v-slot:loading>
+        <q-inner-loading showing color="primary" />
+      </template>
+    </q-table>
   </div>
+  <!-- aqui ponemos filtros personalizados para busacar en la tabla -->
+  <q-drawer side="right" v-model="drawerFilters" :width="350" :breakpoint="fullscreen ? 7000 : 300" color="primary"
+    class="drawer-index" overlay bordered>
+    <div class="">
+      <q-toolbar class="q-px-sm">
+        <q-toolbar-title>Búsqueda por filtros</q-toolbar-title>
+        <q-btn flat rounded @click.prevent="closeDrawerOfFilters" round dense icon="close" />
+      </q-toolbar>
+      <q-separator></q-separator>
+
+      <div class="q-ma-md">
+        <slot name="filter"></slot>
+      </div>
+    </div>
+  </q-drawer>
 </template>
 
 <script setup lang="ts">
@@ -320,7 +318,7 @@ import { debounceTime } from 'rxjs/operators';
 import { OptionTable } from '@components/data-table/models';
 import DataTableOption from '@components/data-table/DataTableOption.vue';
 import { useTree } from '@composable/tree/useTree';
-import { Dark } from 'quasar';
+import { Dark, Screen } from 'quasar';
 
 /****************************************************************************/
 /*                                PROPS                                     */
@@ -411,6 +409,14 @@ const dProps = defineProps({
     type: Object,
     default: () => ({ height: '' }),
   },
+  imgHead: {
+    type: Boolean,
+    default: false,
+  },
+  imgHeadSrc: {
+    type: String,
+    default: 'https://cdn.quasar.dev/logo-v2/svg/logo.svg',
+  }
 });
 
 /****************************************************************************/
@@ -871,7 +877,7 @@ body.body--dark .hr__space
 
 .my-sticky-virtscroll-table
   border: 1px solid rgba(0, 0, 0, 0.12)
-  border-radius: 12px
+  border-radius: 20px
   /* height or max-height is important */
   .q-table--dense
     height: 35px
@@ -922,6 +928,41 @@ body.body--dark .hr__space
   // .q-table tbody td:before, .q-table tbody td:after
   //   background: rgb(236,235,251,0.2)
   //   margin: 4px
+// COLUM STICKY
+  // td:first-child
+  //   /* bg color is important for td; just specify one */
+  //   background-color: #00b4ff
+
+  // tr th
+  //   position: sticky
+  //   /* higher than z-index for td below */
+  //   z-index: 2
+  //   /* bg color is important; just specify one */
+  //   background: #00b4ff
+
+  // thead tr:last-child th
+  //   /* height of all previous header rows */
+  //   top: 48px
+  //   /* highest z-index */
+  //   z-index: 3
+  // thead tr:first-child th
+  //   top: 0
+  //   z-index: 1
+  // tr:first-child th:first-child
+  //   /* highest z-index */
+  //   z-index: 3
+
+  // td:first-child
+  //   z-index: 1
+
+  // td:first-child, th:first-child
+  //   position: sticky
+  //   left: 0
+
+  // /* prevent scrolling behind sticky top row on focus */
+  // tbody
+  //   /* height of all previous header rows */
+  //   scroll-margin-top: 48px
 
 .containerx
   background: red !important

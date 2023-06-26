@@ -1,5 +1,5 @@
 <template>
-  <q-page style="min-height: 100% !important">
+  <q-page>
     <!-- <q-banner inline-actions class="q-ma-xs">
       Asistencia
       <template v-slot:action>
@@ -7,60 +7,58 @@
       </template>
     </q-banner>
     <q-separator /> -->
-    <div class="q-mx-lg ">
-      <div class="row justify-between q-mb-md">
-        <div v-for="(item, index) in cabezera" :key="index" class="q-my-xs col-xs-12 col-sm-4 col-md-3 col-lg-2">
-          <knob-card :item="item" :fontSize="'15px'" :classLabel="'text-grey-7'" class="q-mr-xs" />
-        </div>
+    <div class="row justify-between q-mb-md">
+      <div v-for="(item, index) in cabezera" :key="index" class="q-my-xs col-xs-12 col-sm-4 col-md-3 col-lg-2">
+        <knob-card :item="item" :fontSize="'15px'" :classLabel="'text-grey-7'" class="q-mr-xs" />
       </div>
-      {{ semanaModel }}
-      <data-table :color="'negative'" filter-search btn-exportar-excel btn-full-screen :title="'Title table'" :data="rows"
-        :columns="columns" flat btnFilterAdvance btnLoadTable :headerFilter="true" :separator="'horizontal'"
-        :selection="'multiple'" :visibilityColumns="true" :options="opt">
-        <template v-slot:btn-left>
-          <div class="col-12 col-xs-12 col-sm-6 col-md-2 col-lg-2">
-            <q-checkbox size="md" label="Solo Yo" v-model="bandera" checked-icon="task_alt" unchecked-icon="highlight_off"
-              @update:model-value="listMatrizAcuerdos(true)" />
-          </div>
-          <div class="col-12 col-xs-12 col-sm-6 col-md-4 col-lg-3">
-            <range-date @select-range="selectRange" borderless />
-          </div>
-          <div class="col-12 col-xs-12 col-sm-6 col-md-4 col-lg-3">
-            <select-semana @emit-model="ObtenerSemana" multiple :data="response" :items="valores"
-              :default-item="{ item: 'here', value: 1 }" map-options clereable ref="refSelectItems"></select-semana>
-          </div>
-        </template>
-        <template v-slot:btn-right>
-          <div class="text-center">
-            <q-btn flat round size="md" :color="Dark.isActive ? 'secondary' : 'primary'" :icon="'mdi-cloud-download'"
-              @click="exportarListado()" />
-          </div>
-        </template>
-        <template v-slot:filter>
-          <div class="text-center">
-            <q-btn flat round size="md" color="primary" :icon="'mdi-cloud-download'" @click="exportarListado()" />
-          </div>
-        </template>
-        <template v-slot:body-cell-calories="props">
-          <q-td :props="props">
-            <q-chip dense square :class="props.value.charAt(0) === '+' ? 'fat-cell1' : 'fat-cell2'">
-              <div class="">
-                <div>{{ props.value }}</div>
-              </div>
-            </q-chip>
-          </q-td>
-        </template>
-        <template v-slot:body-cell-fat="props">
-          <q-td :props="props">
-            <q-chip dense square :class="props.value < 10 ? 'fat-cell1' : 'fat-cell2'">
-              <div class="" style="width: 20px">
-                <div>{{ props.value }}</div>
-              </div>
-            </q-chip>
-          </q-td>
-        </template>
-      </data-table>
     </div>
+    <data-table :color="'negative'" filter-search btn-exportar-excel btn-full-screen :title="'Registro de asistencias'"
+      :data="rows" :columns="columns" flat btnFilterAdvance btnLoadTable :headerFilter="true" :separator="'horizontal'"
+      :selection="'multiple'" :visibilityColumns="true" :options="opt">
+      <template v-slot:btn-left>
+        <div class="col-12 col-xs-12 col-sm-6 col-md-2 col-lg-2">
+          <q-checkbox label="Solo Yo" v-model="bandera" @update:model-value="listMatrizAcuerdos(true)" />
+          <!-- checked-icon="task_alt" unchecked-icon="highlight_off" -->
+        </div>
+        <div class="col-12 col-xs-12 col-sm-6 col-md-4 col-lg-3">
+          <range-date @select-range="selectRange" borderless />
+        </div>
+        <div class="col-12 col-xs-12 col-sm-6 col-md-4 col-lg-3">
+          <select-semana @emit-model="ObtenerSemana" multiple :data="response" :items="valores"
+            :default-item="{ item: 'here', value: 1 }" ref="refSelectItems"></select-semana>
+        </div>
+      </template>
+      <template v-slot:btn-right>
+        <div class="text-center">
+          <q-btn flat round size="md" :color="Dark.isActive ? 'secondary' : 'primary'" :icon="'mdi-cloud-download'"
+            @click="exportarListado()" />
+        </div>
+      </template>
+      <template v-slot:filter>
+        <div class="text-center">
+          <q-btn flat round size="md" color="primary" :icon="'mdi-cloud-download'" @click="exportarListado()" />
+        </div>
+      </template>
+      <template v-slot:body-cell-calories="props">
+        <q-td :props="props">
+          <q-chip dense square :class="props.value.charAt(0) === '+' ? 'fat-cell1' : 'fat-cell2'">
+            <div class="">
+              <div>{{ props.value }}</div>
+            </div>
+          </q-chip>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-fat="props">
+        <q-td :props="props">
+          <q-chip dense square :class="props.value < 10 ? 'fat-cell1' : 'fat-cell2'">
+            <div class="" style="width: 20px">
+              <div>{{ props.value }}</div>
+            </div>
+          </q-chip>
+        </q-td>
+      </template>
+    </data-table>
+
   </q-page>
 </template>
 <script setup lang="ts">

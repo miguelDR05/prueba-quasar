@@ -20,7 +20,7 @@
           <q-skeleton type="text" v-if="title && (title === '' || title === undefined)" />
           {{ title }}
         </q-item-section>
-        <q-tooltip v-if="miniState" anchor="center right" self="center left" :offset="[10, 10]" class="bg-secondary">{{
+        <q-tooltip v-if="miniState" anchor="center right" self="center left" :offset="[10, 10]" class="bg-tool-tip">{{
           title
         }}</q-tooltip>
       </template>
@@ -32,7 +32,9 @@
   <div v-else class="">
     <q-separator v-if="separator" />
     <q-space />
-    <q-item clickable :dense="dense" :to="link" class="item-drawer q-my-xs" active-class="actives__link">
+    <q-item clickable :dense="dense" :to="{ path: link, name: title }" class="item-drawer q-my-xs"
+      active-class="actives__link">
+      <!--@click="() => { $router.push({ path: link, params: { title } }) } -->
       <!-- <q-item-section v-if="icon" avatar>
         <q-icon :name="icon" color="grey" />
       </q-item-section> -->
@@ -54,6 +56,7 @@ export interface Menu {
   title?: string | undefined;
   caption?: string | undefined;
   link?: string | undefined;
+  name?: string | undefined;
   color?: string | undefined;
   icon?: string | undefined;
   level?: number;
@@ -67,6 +70,7 @@ export interface Menu {
 withDefaults(defineProps<Menu>(), {
   caption: '',
   link: '#',
+  name: '',
   icon: '',
   color: '',
   level: 0,
@@ -82,6 +86,16 @@ withDefaults(defineProps<Menu>(), {
 
 const espace = 0.13;
 const expandActivate = ref<boolean>(false);
+
+/****************************************************************************/
+/*                                EMITS                                     */
+/****************************************************************************/
+
+const emit = defineEmits(['']);
+
+/****************************************************************************/
+/*                                METHODS                                     */
+/****************************************************************************/
 
 const configStore = useConfigUserStore()
 const expandItem = async () => {

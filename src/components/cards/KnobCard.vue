@@ -14,7 +14,6 @@
         <q-item-section class="text-start">
           <q-item-label :class="Dark.isActive ? '' : classLabel">
             <div :style="Screen.lg ? 'font-size:0.7vw' : ''">{{ item.descripcion }}</div>
-            {{ }}
           </q-item-label>
           <q-item-label>
             <strong>{{ item.cantidad }}</strong>
@@ -46,7 +45,7 @@ interface Props {
 withDefaults(defineProps<Props>(), {
   showValue: true,
   fontSize: "15px",
-  size: "70px",
+  size: "65px",
   trackColor: "grey-3",
   customlClass: "q-ma-none",
   classLabel: "text-subtitle1 text-grey-7",
@@ -65,6 +64,6 @@ withDefaults(defineProps<Props>(), {
 .my-card
   padding: 5px
   width: 100%
-  border-radius: 10px
+  border-radius: 20px
 
 </style>
