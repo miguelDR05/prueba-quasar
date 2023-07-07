@@ -12,25 +12,22 @@
           </template>
         </custom-card>
       </div> -->
+    {{ dataAlert }}
     <data-table class="table2" dense flat filter-search btn-exportar-excel btn-full-screen :title="'Title table'"
       :data="rows" :columns="columns" :separator="'none'">
       <template v-slot:body-cell-calories="props">
         <q-td :props="props">
-          <!-- <q-chip dense square :class="props.value < 10 ? 'fat-cell1' : 'fat-cell2'" :label="props.value"> -->
           <colored-chips :label="props.value" dense square :color="props.value.charAt(0) === '+' ? '#649382' : '#a27486'"
             :background="props.value.charAt(0) === '+' ? '#ebfef8' : '#fff3f7'" border
-            :clickable="props.value.charAt(0) === '+'" @click="alerta('Aqui hago funcicones')">
+            :clickable="props.value.charAt(0) === '+'" @click="alertaPrompt(props.value)">
           </colored-chips>
-          <!-- <div class="" style="width: 20px">
-                <div>{{ props.value }}</div>
-              </div> -->
         </q-td>
       </template>
       <template v-slot:body-cell-name="props">
         <q-td :props="props">
-          <colored-chips square @click="alerta('lol')">
+          <colored-chips clickable square @click="alertaSimple('left')">
             <template v-slot:body>
-              <q-avatar @click="alerta('lol')">
+              <q-avatar>
                 <img src="https://cdn.quasar.dev/img/boy-avatar.png">
               </q-avatar>
               {{ props.value }}
@@ -48,9 +45,9 @@
       </template>
       <template v-slot:body-cell-carbs="props">
         <q-td :props="props">
-          <colored-chips dense :color="'#1a3'">
+          <colored-chips dense :color="'#1a3'" clickable @click="alertaSimple('top')">
             <template v-slot:body>
-              <q-avatar color="red" text-color="white" @click="alerta('lol')">
+              <q-avatar color="red" text-color="white">
                 C
               </q-avatar>
               {{ props.value }}%
@@ -81,6 +78,10 @@ import KnobCard from '@/components/cards/KnobCard.vue';
 import DataTable from '@components/data-table/DataTable.vue';
 import ColoredChips from '@components/chips/ColoredChip.vue'
 import { stringify } from 'querystring';
+import { useAlert } from '@/composable/alert/AlertPlugin';
+import Alert from '@components/alerts/alert.vue'
+import AlertTemplate from '@components/alerts/AlertTemplate.vue'
+import { Dialog, Notify } from 'quasar';
 
 const cabezera = ref([
   {
@@ -337,9 +338,77 @@ const rows = ref<Array<any>>([
   }
 
 ])
-function alerta(param: string) {
-  alert(param)
+
+const dataAlert = ref<any>()
+/****************************************************************************/
+/*                           COMPOSABLE                                     */
+/****************************************************************************/
+
+const { singleAlert, promptAlert } = useAlert();
+
+
+const alertaSimple = async (position: any) => {
+  /*
+  var prompt: any = {
+    state: true,
+    type: 'textarea',
+    label: 'Confirmar eliminar cuenta',
+    isValid: [
+      (val: any) => val.length <= 3 || 'Maximo 3 digitos',
+      (val: any) => val.length > 0 || 'Minimo 1 digito'
+    ],
+  }
+  var options: any = {
+    state: true,
+    type: 'checkbox',
+    model: 'multiple',
+    inline: true,
+    items: [
+      { label: 'Option 1', value: 'opt1', color: 'secondary' },
+      { label: 'Option 2', value: 'opt2' },
+      { label: 'Option 3', value: 'opt3', disable: true }
+    ]
+  }
+  const chipAlert: any = await promptAlert({
+    spinner: true,
+    prompt: { state: true },
+    options: { state: true, inline: false, type: 'checkbox', },
+    innerLoading: true
+  });
+  if (chipAlert.state) {
+    // si es verdad
+    dataAlert.value = chipAlert.data
+    Notify.create({ type: 'positive', message: `Successfully ${chipAlert.data.prompt} saved!` })
+
+  } else {
+    console.log('SI es falso ->', chipAlert);
+  }
+  */
+  // Dialog.create({
+  //   component: AlertTemplate
+  // })
+  const alerta = await singleAlert({
+    type: 'question',
+    title: 'Pregunta',
+    mensaje: '¿Desea enviar notificaciones a todos los mienbros del equipo del acta?',
+    cancel: true,
+    position: position
+  })
+  if (alerta) {
+    console.log('es -> ', alerta);
+  }
 }
+const alertaPrompt = async (item: string) => {
+  const alerta: any = await promptAlert({
+    prompt: {
+      state: true,
+      type: 'text',
+      model: item
+    }
+  })
+  dataAlert.value = alerta.data
+}
+
 </script>
 <style lang="sass">
 .table2

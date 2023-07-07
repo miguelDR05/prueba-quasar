@@ -19,6 +19,11 @@ const routes: RouteRecordRaw[] = [
         path: 'asistencia/',
         component: () => import('pages/asistencia/views/AsistenciaView.vue'),
         name: 'Asistencia',
+      },
+      {
+        path: 'horario/',
+        component: () => import('pages/horario/views/HorarioView.vue'),
+        name: 'Horario',
       }
     ],
   },

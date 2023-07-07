@@ -5,59 +5,153 @@
         <!-- class="text-white toolbar1" -->
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="leftDrawerOpen = !leftDrawerOpen" />
 
-        <q-toolbar-title class="row justify-start item-center text-hidden" :style="Screen.xs ? 'font-size:18px' : ''">
+        <q-toolbar-title class="row justify-start item-center text-hidden" :style="Screen.xs ? 'font-size:16px' : ''">
           <!-- <q-icon color="primary" name="mdi-database-outline" size="md" /> -->
           {{ route.name }}
         </q-toolbar-title>
         <!-- <q-btn flat size="sm" round :icon="iconTheme" @click="changeTheme()"></q-btn> -->
-        <q-btn flat round icon="mdi-cog">
-          <q-menu fit @update:model-value="limpiarColores">
-            <div class="row no-wrap q-pa-md">
-              <div class="column" style="width: 200px">
-                <div class="text-h6 q-mb-sm">Configuraciones</div>
-                <!-- <q-separator class="q-mb-md" /> -->
-                <div class="q-gutter-sm">
-                  <q-btn round class="toolbar1" icon="mdi-format-color-highlight">
-                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                      <q-color v-model="primaryColor" @update:model-value="changeColorBarra(primaryColor, 1)" />
-                      <!--   @update:model-value="changeColorBarra(primaryColor, 1)" -->
-                    </q-popup-proxy>
-                  </q-btn>
-                  <q-btn round class="toolbar2" icon="mdi-format-color-highlight">
-                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                      <q-color v-model="secondaryColor" @update:model-value="changeColorBarra(secondaryColor, 2)" />
-                      <!-- @update:model-value="changeColorBarra(secondaryColor, 2)"  -->
-                    </q-popup-proxy>
-                  </q-btn>
-                  <q-btn :color="'primary'" no-caps label="Guardar Cambios" size="small" v-close-popup
-                    @click="resetSaveColor(false)" />
-                  <q-btn push color="primary" round icon="mdi-restore" v-close-popup @click="resetSaveColor(true)">
-                    <q-tooltip transition-show="scale" transition-hide="scale">
-                      Resetear Colores
-                    </q-tooltip>
-                  </q-btn>
+        <q-btn-dropdown v-if="Screen.xs" no-icon-animation color="primary" flat round dropdown-icon="mdi-dots-vertical">
+          <q-list>
+            <q-item clickable v-close-popup>
+              <!-- @click="onItemClick" -->
+              <q-item-section avatar>
+                <q-avatar icon="search" color="primary" text-color="white" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Buscar</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup @click="$router.push({ path: '/perfil', query: { id: 'notificaciones' } })">
+              <!-- @click="onItemClick" -->
+              <q-item-section avatar>
+                <q-avatar icon="mdi-bell-outline" color="primary" text-color="white" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Notificaciones</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup>
+              <!-- @click="onItemClick" -->
+              <q-item-section avatar>
+                <q-avatar icon="mdi-cog" color="primary" text-color="white" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>
+                  Configuraciones
+                </q-item-label>
+              </q-item-section>
+              <q-menu fit @update:model-value="limpiarColores">
+                <div class="row no-wrap q-pa-md">
+                  <div class="column" style="width: 200px">
+                    <div class="text-h6 q-mb-sm">Configuraciones</div>
+                    <!-- <q-separator class="q-mb-md" /> -->
+                    <div class="q-gutter-sm">
+                      <q-btn round class="toolbar1" icon="mdi-format-color-highlight">
+                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                          <q-color v-model="primaryColor" @update:model-value="changeColorBarra(primaryColor, 1)" />
+                          <!--   @update:model-value="changeColorBarra(primaryColor, 1)" -->
+                        </q-popup-proxy>
+                      </q-btn>
+                      <q-btn round class="toolbar2" icon="mdi-format-color-highlight">
+                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                          <q-color v-model="secondaryColor" @update:model-value="changeColorBarra(secondaryColor, 2)" />
+                          <!-- @update:model-value="changeColorBarra(secondaryColor, 2)"  -->
+                        </q-popup-proxy>
+                      </q-btn>
+                      <q-btn :color="'primary'" no-caps label="Guardar Cambios" size="small" v-close-popup
+                        @click="resetSaveColor(false)" />
+                      <q-btn push color="primary" round icon="mdi-restore" v-close-popup @click="resetSaveColor(true)">
+                        <q-tooltip transition-show="scale" transition-hide="scale">
+                          Resetear Colores
+                        </q-tooltip>
+                      </q-btn>
+                    </div>
+                  </div>
+
+                  <q-separator vertical class="q-mx-md" />
+
+                  <div class="column items-center">
+                    <q-avatar size="72px" class="cursor-pointer" @click="$router.push('/perfil')">
+                      <!-- <q-icon name="mdi-account-circle" color="grey" size="72px" />-->
+
+                      <img :src="'https://drive.google.com/uc?export=download&id=' + profilePicture" />
+                    </q-avatar>
+
+                    <div class="text-subtitle1 q-mt-sm q-mb-xs">
+                      {{ usuario }}
+                    </div>
+
+                    <q-btn color="primary" no-caps label="Logout" size="small" v-close-popup @click="logout" />
+                    <!--  @click="logout" -->
+                  </div>
+                </div>
+              </q-menu>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
+        <div v-else class="row items-center q-gutter-x-sm">
+          <!-- <q-btn size="12px" dense flat round icon="search"></q-btn> -->
+          <q-input dense outlined rounded color="grey-2" v-model="filter" placeholder="Buscar aqui..."
+            class="filter-page">
+            <!--  @update:model-value="nextSearchFilter($event)" -->
+            <template v-slot:prepend>
+              <q-icon v-if="filter !== ''" name="close" @click="filter = ''" class="cursor-pointer" />
+              <q-icon name="search" />
+            </template>
+          </q-input>
+          <q-btn size="12px" class="bg-grey-3" :class="Dark.isActive ? 'bg-grey-9' : ''" unelevated dense round
+            icon="mdi-bell-outline" @click="$router.push({ path: '/perfil', query: { id: 'notificaciones' } })">
+            <q-badge floating color="green" rounded />
+          </q-btn>
+          <q-btn flat dense round icon="mdi-cog">
+            <q-menu v-model="showConfigMenu" fit @update:model-value="limpiarColores">
+              <div class="row no-wrap q-pa-md">
+                <div class="column" style="width: 200px">
+                  <div class="text-h6 q-mb-sm">Configuraciones</div>
+                  <!-- <q-separator class="q-mb-md" /> -->
+                  <div class="q-gutter-sm">
+                    <q-btn round class="toolbar1" icon="mdi-format-color-highlight">
+                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                        <q-color v-model="primaryColor" @update:model-value="changeColorBarra(primaryColor, 1)" />
+                        <!--   @update:model-value="changeColorBarra(primaryColor, 1)" -->
+                      </q-popup-proxy>
+                    </q-btn>
+                    <q-btn round class="toolbar2" icon="mdi-format-color-highlight">
+                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                        <q-color v-model="secondaryColor" @update:model-value="changeColorBarra(secondaryColor, 2)" />
+                        <!-- @update:model-value="changeColorBarra(secondaryColor, 2)"  -->
+                      </q-popup-proxy>
+                    </q-btn>
+                    <q-btn :color="'primary'" no-caps label="Guardar Cambios" size="small" v-close-popup
+                      @click="resetSaveColor(false)" />
+                    <q-btn push color="primary" round icon="mdi-restore" v-close-popup @click="resetSaveColor(true)">
+                      <q-tooltip transition-show="scale" transition-hide="scale">
+                        Resetear Colores
+                      </q-tooltip>
+                    </q-btn>
+                  </div>
+                </div>
+
+                <q-separator vertical class="q-mx-md" />
+
+                <div class="column items-center">
+                  <q-avatar size="72px" class="cursor-pointer" @click="$router.push('/perfil')">
+                    <!-- <q-icon name="mdi-account-circle" color="grey" size="72px" />-->
+
+                    <img :src="'https://drive.google.com/uc?export=download&id=' + profilePicture" />
+                  </q-avatar>
+
+                  <div class="text-subtitle1 q-mt-sm q-mb-xs">
+                    {{ usuario }}
+                  </div>
+
+                  <q-btn color="primary" no-caps label="Logout" size="small" v-close-popup @click="logout" />
+                  <!--  @click="logout" -->
                 </div>
               </div>
-
-              <q-separator vertical class="q-mx-md" />
-
-              <div class="column items-center">
-                <q-avatar size="72px" class="cursor-pointer" @click="$router.push('/perfil')">
-                  <!-- <q-icon name="mdi-account-circle" color="grey" size="72px" />-->
-
-                  <img :src="'https://drive.google.com/uc?export=download&id=' + profilePicture" />
-                </q-avatar>
-
-                <div class="text-subtitle1 q-mt-sm q-mb-xs">
-                  {{ usuario }}
-                </div>
-
-                <q-btn color="primary" no-caps label="Logout" size="small" v-close-popup @click="logout" />
-                <!--  @click="logout" -->
-              </div>
-            </div>
-          </q-menu>
-        </q-btn>
+            </q-menu>
+          </q-btn>
+        </div>
       </q-toolbar>
     </q-header>
     <q-drawer v-model="leftDrawerOpen" show-if-above :breakpoint="1160" bordered :width="250"
@@ -66,16 +160,18 @@
       <q-scroll-area class="fit" :class="Dark.isActive ? '' : miniState ? 'bg-dark text-white' : 'bg-drawer'">
 
         <q-list>
-          <q-item-label class="text-weight-medium text-subtitle1 q-px-md q-py-sm">
-            <q-avatar size="46px" class="cursor-pointer" @click="$router.push('/perfil')">
+          <q-item-label class="text-weight-medium q-py-md row items-center q-mx-sm">
+            <q-avatar size="50px" class="cursor-pointer" @click="$router.push('/perfil')">
               <!-- <q-icon name="mdi-account-circle" color="" size="30px" /> -->
               <img :src="'https://drive.google.com/uc?export=download&id=' + profilePicture" />
               <q-badge color="positive" floating
-                style="border:1px solid #fff; border-radius: 50%; position: absolute; z-index: 100; top: 30px;"></q-badge>
+                style="border:1px solid #fff; border-radius: 50%; position: absolute; z-index: 100; top: 35px;"></q-badge>
             </q-avatar>
-            <span class="q-ml-md">{{ usuario }}</span>
+            <div class="">
+              <div class="q-ml-md text-subtitle1" style="font-weight: 600;">{{ usuario }}</div>
+              <div class="q-ml-md" style="font-size: 11px;">{{ 'geralon19@gmail.com' }}</div>
+            </div>
           </q-item-label>
-          <q-separator class="q-mb-sm" />
           <MenuLink v-for="link in itemsMenu" :key="link.title" v-bind="link" :dense="false" :separator="false"
             :mini-state="miniState" />
         </q-list>
@@ -166,11 +262,11 @@ const itemsMenu = ref([
       },
       {
         idModuleAuth: "46f883ba-ddf2-44c6-bf0c-07ef52524d0f",
-        title: "Matriz Aac",
+        title: "Horario",
         level: 2,
         code: "gpr-act-mat_aac",
         icon: "mdi-folder-table",
-        link: "/actas/matriz-aac",
+        link: "/horario",
         sequence: 4,
         parentId: "e5928a89-8221-4ff7-a8d1-099174454fb4",
         children: []
@@ -318,6 +414,8 @@ const itemsMenu = ref([
 ])
 const usuario = ref('Miguel');
 const profilePicture = ref<string>('1T1iylp1_q8aveqTcAk_pLwgSGSC7kZCL')
+const filter = ref<string>('')
+const showConfigMenu = ref<boolean>(false)
 /****************************************************************************/
 /*                              METHODS                                     */
 /****************************************************************************/
@@ -422,4 +520,7 @@ onUpdated(async () => {
   bottom: 0
   right: 0
   left: 0
+.filter-page
+  border-radius: 20px
+
 </style>

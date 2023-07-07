@@ -5,7 +5,8 @@
         <q-tabs v-model="tab" :vertical="!Screen.xs" active-color="primary" active-bg-color="secondary" no-caps
           indicator-color="transparent" outside-arrows>
           <q-tab v-for="(item, index) in itemsMenu" :key="index" :name="item.name" :label="item.label"
-            :class="item.name == 'eliminarCuenta' ? 'text-red text-bold' : ''" />
+            :class="item.name == 'eliminarCuenta' ? 'text-red text-bold' : ''"
+            @click="$router.push({ path: '/perfil', query: { id: item.name } })" />
         </q-tabs>
       </template>
 
@@ -22,18 +23,33 @@
   </q-card>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { useRouter, useRoute, } from 'vue-router';
+import { ref, watch } from 'vue'
 import { Screen } from 'quasar'
 const dprops = defineProps({
   itemsMenu: {
     type: Array<any>,
     default: [],
   },
+  firstItem: {
+    type: String,
+    default: ''
+  }
 })
+// router
+const router = useRouter();
+const route = useRoute()
 
-const firstItem = ref<any>(dprops.itemsMenu[0].name)
-const tab = ref<string>(firstItem)
+const tab = ref<string>(dprops.firstItem)
 const splitterModel = ref<number>(20)
+
+watch(
+  () => dprops.firstItem,
+  (v: any) => {
+    console.log(dprops.firstItem);
+    tab.value = v;
+  }
+);
 
 </script>
 <style lang="sass">
@@ -48,8 +64,8 @@ const splitterModel = ref<number>(20)
 .q-splitter--vertical > .q-splitter__panel
   height: 100%
   .q-tab
-    padding: 5px 15px
-    margin: 10px 15px
+    padding: 8px
+    margin: 10px
     border-radius: 15px
     min-height: 35px
     justify-content: start

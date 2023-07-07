@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <custom-tab :items-menu="itemsMenu">
+    <custom-tab :items-menu="itemsMenu" :first-item="firstItem">
       <template v-slot:perfil>
         <custom-card>
           <template v-slot:content>
@@ -24,13 +24,12 @@
                   </q-btn>
                 </div>
               </div>
-
             </div>
           </template>
         </custom-card>
         <custom-card>
           <template v-slot:content>
-            <div class="row justify-between">
+            <div class="row justify-between q-mb-sm">
               <div class="text-subtitle1"><strong>Informacion Personal</strong></div>
               <div><q-btn outline icon="mdi-account-edit-outline" rounded style="text-transform: none;"> Edit
                   <q-tooltip class="bg-tool-tip">Editar informacion personal</q-tooltip>
@@ -46,7 +45,7 @@
         </custom-card>
         <custom-card>
           <template v-slot:content>
-            <div class="row justify-between">
+            <div class="row justify-between q-mb-sm">
               <div class="text-subtitle1"><strong>Direccion</strong></div>
               <div><q-btn outline icon="mdi-account-edit-outline" rounded style="text-transform: none;"> Edit
                   <q-tooltip class="bg-tool-tip">Editar direccion</q-tooltip>
@@ -82,11 +81,18 @@
   </q-page>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { useRouter, useRoute, } from 'vue-router';
+import { ref, onMounted, onUpdated } from 'vue';
 import { Screen } from 'quasar';
 import CustomCard from '@/components/cards/CustomCard.vue';
 import CustomTab from '@components/tabs/CustomTab.vue'
 
+
+// router
+const router = useRouter();
+const route = useRoute()
+
+const firstItem = ref<string>('')
 const itemsMenu = ref<any>([
   {
     name: 'perfil',
@@ -139,6 +145,13 @@ const itemsProfile = ref<any>({
 const perfil = ref<Array<any>>(itemsProfile.value.perfil)
 const informacionPersonal = ref<Array<any>>(itemsProfile.value.informacionPersonal)
 const direccion = ref<Array<any>>(itemsProfile.value.direccion)
+// notificaciones
+onMounted(async () => {
+  firstItem.value = route.query.id ? route.query.id : itemsMenu.value[0].name;
+});
+onUpdated(async () => {
+  firstItem.value = route.query.id ? route.query.id : itemsMenu.value[0].name;
+});
 
 </script>
 <style lang="sass">
